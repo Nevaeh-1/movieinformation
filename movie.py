@@ -43,11 +43,13 @@ for x in range(page):
         t = w[0]
         d = w[1]
         print(d)
-        u = 'http://www.zmz2019.com'+aa.get('href')
-        country = d[d.find('【')+1:d.find('】')]
-        name = d[d.find('《')+1:d.find('》')]
-        ename = d[d.find('(')+1:d.find(')')]
-        y = re.search(r'\d{1,4}$', d).group(0)
+        u = 'http://www.zmz2019.com' + aa.get('href')
+        country = d[d.find('【') + 1:d.find('】')]
+        name = d[d.find('《') + 1:d.find('》')]
+        ename = d[d.find('(') + 1:d.find(')')]
+        y = re.search(r'\d{1,4}$', d)
+        if y is not None:
+            y = y.group(0)
         print(y)
         j = [{'type': t, 'country': country, 'ChineseName': name, 'EnglishName': ename, 'year': y}]
         m.append(j)
