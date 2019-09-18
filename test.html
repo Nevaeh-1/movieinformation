@@ -1,0 +1,944 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="http://js.jstucdn.com/style/layout.css" rel="stylesheet" type="text/css" />
+<link href="http://js.jstucdn.com/style/style.css" rel="stylesheet" type="text/css" />
+<script src="http://js.jstucdn.com/js/jquery-1.7.1.min.js" charset="utf-8"></script>
+<script src="http://js.jstucdn.com/js/global.js?v=20160922" charset="utf-8"></script>
+<title>影视列表页|ZiMuZu.tv,字幕组网站,美剧,日剧,韩剧,电影,资讯,下载|字幕下载|美剧下载</title>
+<meta name="keywords" content="美剧,日剧,韩剧,纪录片,高清电影,海外影视,新闻资讯,双语字幕,字幕下载,字幕翻译,RMVB电影,手机电影,HR-HDTV电影,迅雷下载,快车下载,磁力下载,电驴下载,字幕组,公开课">
+<meta name="description" content="ZiMuZu字幕组网站,www.zimuzu.tv是一群由海外留学生于2015年1月1号组建的字幕组分享网站,以翻译最新最快影视剧为兴趣爱好,并且免费分享给广大网友和爱好者，欢迎大家的加入">
+</head>
+<body>
+<script>
+var uri = document.location.href.toLowerCase();
+var na = ['/release','/user/reg','/work','/translate'];
+var na_ga = [];
+
+function is_a(){
+for(var i in na)
+    if(uri.indexOf(na[i])>=0) return false;
+return true;
+}
+
+function is_ga_a(){
+var t = na.concat(na_ga);
+for(var i in t)
+    if(uri.indexOf(t[i])>=0) return false;
+return true;
+}
+</script>
+
+<script type="text/javascript">
+    if(is_a()) document.write('<script src="http://ad.wang502.com/c/js/140_z.js"><\/script>');
+</script>
+
+<div class="top-box">
+    <div class="header">
+  <div class="w">
+      <h1 class="fl"><a href="/" class="w_index"><img id="logo"></a></h1>
+      <form name="search" action="/search/index" method="get" class="fl corner search-box">
+          <input type="text"  size="20" class="keywords" name="keyword" autocomplete='off' placeholder="請輸入搜尋關鍵詞" />
+          <input type="submit" class="submit">
+          <div class="search-list" style="display:none;"></div>
+          <ul id="top_search_list" style="display:none;"></ul>
+          <input type="hidden" name="search_type" id="search_type" value="">
+      </form>
+      <span class="app_link" style="position: relative; font-size: 16px; font-weight: bold; left: 20px; top: 15px;"><a href="http://app.rrys.tv" target="_blank" style="color:#fff">安装人人影视客户端</a><span style="position: absolute;;left:0px;top:35px;display: none;"><img src="http://app.rrysapp.com/uploads/20181115/9ba002992f234b7c7c4203db5abe7222.png" style="width:180px;height: 180px;"></span></span>
+       <div class="fr top-login">
+        <!-- 未登录 -->
+        <div class="top-login-before" style="display:none;"><div class="u"><em class="ico user-ico"></em><a href="/user/login">登入</a>/ <a href="/user/reg">註冊</a>&nbsp;&nbsp;<a href="/user/login/change_pwd">修改登录密码</a></div></div>
+        <!-- 未登录 -->
+        <!-- 已登录 -->
+        <div class="top-login-after" style="display:none;">
+          <div class="fl u">
+          </div>
+          <div class="fl e top_msg">
+            <em class="corner" style="display:none;"></em>
+            <div class="user-pop p-email">
+                <div class="user-pop-con corner">
+                    <span class="ar"></span>
+                      <ul>
+                        <li class="message"><a href='/user/message'><span>私信</span></a><strong class="corner"></strong></li>
+                        <li class="sys_message" style="margin-bottom: 10px;"><a href="/user/sysmessage"><span>系统通知</span></a><strong class="corner"></strong></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="fr fb">
+            我要发布<em></em>
+            <div class="user-pop p-release">
+                <div class="user-pop-con corner">
+                    <span class="ar"></span>
+                      <ul id="post_List">
+                      </ul>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <!-- 已登录 -->
+       </div>
+  </div>
+</div>
+
+<div class="notice">
+  <div class="w">
+    <p><strong class="f0">网站公告：</strong> <a target="_blank"><span></span></a></p>
+    <a class="close">x</a>
+  </div>
+</div>
+
+<style>
+.signin-tips{ border-radius:5px; border:1px solid #a6884c; background:#fab639; color:#fff; width:436px; height:95px; box-shadow:3px 3px 0 rgba(0,0,0,.3);z-index: 999;}
+.signin-tips .fl{ font-size:60px; font-weight:bold; width:40%; text-align:center; margin-top:36px; text-shadow:1px 1px 0 #333;}
+.signin-tips .fr{ width:60%; font-size:17px; line-height:150%; margin-top:17px; text-shadow:1px 1px 0 #666;}
+.signin-tips .fr b{ font-size:25px;}
+</style>
+<script>
+$('#logo').attr('src',GLOBAL.CONST.RES_URL+'images/logo.png');
+GLOBAL.JQUERY.SEARCHTIPS(250,function(){$('.search-list').hide()});
+var navbar_a,navbar_b;
+
+$(document).ready(function(){
+    //加载用户信息
+    var ginfo  = $.cookie('GINFO')
+    if (ginfo) {
+        $.ajax({
+            url: '/user/login/getCurUserTopInfo',
+            async: false,
+            dataType: "json",
+            success: function(R){
+                GLOBAL.InitTopUserInfo(R.data,R.status);
+            }
+        });
+    } else {
+        $('.top-login-before').show();
+    }
+    //加载静态数据
+    var common_data = sessionStorage['common_data'];
+    if (common_data) {
+        var data = JSON.parse(common_data)
+        load_hotkeywords(data.hotkeywords)
+        load_announcements(data.announcements)
+    } else {
+        $.getJSON(GLOBAL.CONST.WWW_URL+'public/common_data',function(R){
+            //加载热搜关键词
+            var hotkeywords = R.data.hotkeywords;
+            load_hotkeywords(hotkeywords)
+            //加载公告
+            var announcements = R.data.announcements;
+            load_announcements(announcements)
+            //输入存入到sessionStorage
+            sessionStorage.setItem('common_data', JSON.stringify(R.data));
+        });
+    }
+
+  $('.top-login-after .fb').mouseover(function(){
+    $(this).addClass('fb-selected');
+  }).mouseout(function(){
+    $(this).removeClass('fb-selected');
+  })
+  $('#logout').click(function(){
+    GLOBAL.Loading();
+    $.getJSON('/user/logout/ajaxLogout',function(data){
+      if(data.status==1){
+        window.history.go(0);
+      }
+      GLOBAL.Loading('hide');
+    });
+    return false;
+  });
+  $('.app_link a').hover(function(){
+    $(this).next().show();
+  },function(){
+    $(this).next().hide();
+  });
+});
+
+function load_hotkeywords(hotkeywords)
+{
+    var html = '<li><a href="https://shop176144336.taobao.com/" target="_blank" rel="nofollow"><span style="color:#ED8600">1</span>人人影视淘宝店</a></li>\
+';
+    for(key in hotkeywords){
+        key = parseInt(key);
+        if (typeof hotkeywords[key].keyword !== 'undefined') html += '<li><a href="/search?keyword='+encodeURIComponent(hotkeywords[key].keyword)+'"><span class="corner50">'+(key+1)+'</span>'+hotkeywords[key].keyword+'</a></li>';
+    }
+    $('.search-list').html('<ul class="corner box key-result">'+html+'</ul>');
+}
+
+function load_announcements(announcements) {
+    if(announcements && announcements.updatetime > GLOBAL.Util.getCookie('last_announ')){
+        $('.notice').show().find('.w span').text(announcements.title).parent().attr('href','/announcement/'+announcements.id).parent().next().click(function(){
+            $('.notice').hide();
+            GLOBAL.Util.setCookie('last_announ',announcements.updatetime,1000*60*60*24*365);
+        });
+    }
+}
+</script>    
+    <div style="text-align:center; margin:20px 0;">
+
+<!-- 
+<script type="text/javascript"> var cpro_id = "u3556363"; </script>
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+ -->
+
+<!-- <center><script async src="https://res.drmfslx.cn/do/do.js?cid=A48979CC&skey=23a336ef"></script></center> -->
+
+<script type="text/javascript">
+//if(is_ga_a()) document.write('<script src="http://g.ousns.net/ga-728-t.js?232" type="text/javascript"><\/script>');
+</script>
+
+<a href="http://t.cn/Ai8vAlvU" target="_blank" rel="nofollow"><img src="http://tu.jstucdn.com/g3/ad-img/ky.gif"/></a>
+
+</div>
+
+    <div class="menu-box">
+  <ul class="w">
+    <li><a href="/" class="w_index">首页</a></li>
+    <li channel="translate"><a href="/translate">翻译任务</a></li>
+    <li channel="article"><a href="/article">资讯</a></li>
+    <li channel="subtitle"><a href="/subtitle">字幕</a></li>
+    <li channel="resource"><a href="/resourcelist">影视库</a></li>
+    <li channel='top'><a href="/html/top/week.html">排行榜</a></li>
+    <li channel="today"><a href="/today">今日</a></li>
+    <li channel='schedule'><a href="/tv/schedule">播出表</a></li>
+    <li channel="help"><a href="/help">求档</a></li>
+    <li><a href="/Announcement">公告</a></li>
+    <li><a href="http://allyingshi.com/fanyi/index.html">合作洽谈</a></li>
+  </ul>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  if(navbar_a) $('.menu-box li:first').after(navbar_a);
+  if(navbar_b) $('.menu-box li:last').after(navbar_b);
+  var matches = window.location.href.match(/http:\/\/[^/]+(\/.*)/);
+  var group_name = matches==null?'':matches[1].replace(/\/{2,}/m,'/');
+  var groups = {'article':'^/article','fav':'^/user/fav','subtitle':'^/[a-z]?subtitle','resource':'^/[a-z]?resourcelist|/[a-z]?resource/','schedule':'^/tv/schedule|/html/return|/html/new','today':'^/today','help':'^/help','top':'^/html/top/','translate':'^/translate'};
+  for(key in groups)
+  {
+    regx = new RegExp(groups[key],'i');
+    if(group_name.search(regx)!=-1)
+    {
+      $('.menu-box li[channel='+key+'] a').addClass('cur');
+      return true;
+    }
+  }
+  $('.menu-box li:first a').addClass('cur');
+});
+</script>
+<div style="text-align:center; margin:0 0 15px 0;">
+<!-- tb-ssp-728-2 tmp -->
+<!--<script charset="gbk" src="https://p.tanx.com/ex?i=mm_111117185_10092486_44940980"></script>-->
+<!--
+<script type="text/javascript"> var cpro_id = "u3556363"; </script>
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+-->
+<a href="https://rebrand.ly/9b674?utm_source=zimuzu&utm_medium=banner&utm_campaign=2019_zimuzu&utm_content=960x91" target="_blank" rel="nofollow"><img src="http://tu.jstucdn.com/g3/ad-img/5.jpg"/></a>
+</div>
+
+</div>
+
+<div class="middle-box">
+    <div class="w resource-box">
+        <div class="area-right">
+          <div style="margin-bottom:15px;">
+
+<script type="text/javascript">
+if(is_ga_a()) document.write('<script src="http://g.ousns.net/ga-300.js?81" type="text/javascript"><\/script>');
+</script>
+
+<!-- tb-300-2-ssp -->
+<!-- <script charset="gbk" src="https://p.tanx.com/ex?i=mm_111117185_10092486_48076998"></script> -->
+
+<!-- <a href="http://www.zmz2019.com/announcement/108" target="blank" rel="nofollow"><img src="http://tu.jstucdn.com/g3/ad-img/ysj/300x300.jpg"/></a> -->
+
+<div id="ad9" style="display:none;text-align:center;margin:10px 0;overflow:hidden;">
+</div>
+<!-- 
+<script>
+$(function(){
+    $('#ad9').show().insertAfter('div.resource-sidebar li:eq(2)');
+});
+</script>
+-->
+</div>
+
+          
+          <div class="box clearfix resource-sidebar">
+              <h2 class="it">全站熱門</h2>
+              <ul>
+                  <li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/37932"><img src="http://tu.jstucdn.com/ftp/2019/0701/m_ba169c4b36220f2d0b6eb5cb03f33b80.jpeg" /></a>
+                          <span class="corner top">top<b>1</b></span>
+                      </div>
+                      <h3><a href="/resource/37932">《轮到你了》</a></h3>
+                      <p><span class="tag mov">日剧</span>单剧连载中</p>
+                      <p>悬疑</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/34700"><img src="http://tu.jstucdn.com/ftp/2016/0830/m_7018c4f625daffe760c665de4843ad66.jpg" /></a>
+                          <span class="corner ">top<b>2</b></span>
+                      </div>
+                      <h3><a href="/resource/34700">《最终幻想15：王者之剑》</a></h3>
+                      <p><span class="tag mov">电影</span>日本 2017</p>
+                      <p>动作</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38562"><img src="http://tu.jstucdn.com/ftp/2019/0824/m_7931cfb51a0fd051c746423f09b35486.jpeg" /></a>
+                          <span class="corner ">top<b>3</b></span>
+                      </div>
+                      <h3><a href="/resource/38562">《美国工厂》</a></h3>
+                      <p><span class="tag mov">电影</span>美国 2019</p>
+                      <p>纪录</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/30440"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_722c85d3507bb76ad4a30b8cc16c71cf.jpg" /></a>
+                          <span class="corner ">top<b>4</b></span>
+                      </div>
+                      <h3><a href="/resource/30440">《浴血黑帮》</a></h3>
+                      <p><span class="tag mov">英剧</span>第5季连载中</p>
+                      <p>动作/剧情/暴力</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38450"><img src="http://tu.jstucdn.com/ftp/2019/0825/m_1899c8521dc0f96c983b6d1217e9dc16.jpg" /></a>
+                          <span class="corner ">top<b>5</b></span>
+                      </div>
+                      <h3><a href="/resource/38450">《佛州中部上帝养成史》</a></h3>
+                      <p><span class="tag mov">美剧</span>第1季连载中</p>
+                      <p>喜剧</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/33559"><img src="http://tu.jstucdn.com/ftp/2019/0815/m_0ac58a88c69a2cea4933b8b69e4d67ea.jpg" /></a>
+                          <span class="corner ">top<b>6</b></span>
+                      </div>
+                      <h3><a href="/resource/33559">《球手》</a></h3>
+                      <p><span class="tag mov">美剧</span>第5季连载中</p>
+                      <p>剧情</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38413"><img src="http://tu.jstucdn.com/ftp/2019/0808/m_03cecc1138b884886497d48a590c0ae9.jpg" /></a>
+                          <span class="corner ">top<b>7</b></span>
+                      </div>
+                      <h3><a href="/resource/38413">《致命女人》</a></h3>
+                      <p><span class="tag mov">美剧</span>第1季连载中</p>
+                      <p>剧情/喜剧</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38446"><img src="http://tu.jstucdn.com/ftp/2019/0810/m_e1d96708d56ddfa381898758d5ddb671.jpg" /></a>
+                          <span class="corner ">top<b>8</b></span>
+                      </div>
+                      <h3><a href="/resource/38446">《全裸导演》</a></h3>
+                      <p><span class="tag mov">日剧</span>第1季完结</p>
+                      <p>动作/剧情/励志/科教/枪战/传记</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38539"><img src="http://tu.jstucdn.com/ftp/2019/0821/m_63978b053c651434caa9798b8c14ebfa.jpg" /></a>
+                          <span class="corner ">top<b>9</b></span>
+                      </div>
+                      <h3><a href="/resource/38539">《巴黎红灯区》</a></h3>
+                      <p><span class="tag mov">电影</span>法国 2018</p>
+                      <p>动作/喜剧/罪案/枪战</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/35663"><img src="http://tu.jstucdn.com/ftp/2019/0808/m_fd68480e660d0c1d7a3e7d39699e17d1.jpg" /></a>
+                          <span class="corner ">top<b>10</b></span>
+                      </div>
+                      <h3><a href="/resource/35663">《心理神探》</a></h3>
+                      <p><span class="tag mov">美剧</span>第2季完结</p>
+                      <p>剧情/惊悚</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/35241"><img src="http://tu.jstucdn.com/ftp/2019/0825/m_455c1d7e5f0c089e04bca317724ec0e6.jpg" /></a>
+                          <span class="corner ">top<b>11</b></span>
+                      </div>
+                      <h3><a href="/resource/35241">《十三个原因》</a></h3>
+                      <p><span class="tag mov">美剧</span>第3季连载中</p>
+                      <p>剧情</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/37997"><img src="http://tu.jstucdn.com/ftp/2019/0726/m_d323f2b4be88dbb3586d02deb1307e44.jpg" /></a>
+                          <span class="corner ">top<b>12</b></span>
+                      </div>
+                      <h3><a href="/resource/37997">《潘尼沃斯》</a></h3>
+                      <p><span class="tag mov">美剧</span>第1季连载中</p>
+                      <p>动作/剧情/悬疑</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/32755"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_4557152c57c2768d470b5c8b03ed90de.jpg" /></a>
+                          <span class="corner ">top<b>13</b></span>
+                      </div>
+                      <h3><a href="/resource/32755">《情事》</a></h3>
+                      <p><span class="tag mov">美剧</span>第5季连载中</p>
+                      <p>剧情/生活/爱情</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38000"><img src="http://tu.jstucdn.com/ftp/2019/0710/m_9d70b9d85054c7ed8998621af297f520.jpg" /></a>
+                          <span class="corner ">top<b>14</b></span>
+                      </div>
+                      <h3><a href="/resource/38000">《轮到你了 番外篇 房门之内》</a></h3>
+                      <p><span class="tag mov">日剧</span>单剧连载中</p>
+                      <p>悬疑</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/38156"><img src="http://tu.jstucdn.com/ftp/2019/0628/m_79534227181dfe481cc72410ce869ed3.jpg" /></a>
+                          <span class="corner ">top<b>15</b></span>
+                      </div>
+                      <h3><a href="/resource/38156">《黑袍纠察队》</a></h3>
+                      <p><span class="tag mov">美剧</span>第1季完结</p>
+                      <p>剧情/暴力/血腥</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/34425"><img src="http://tu.jstucdn.com/ftp/2019/0701/m_8b3bb0b0d98d22a51dc1a2daf62b6d51.jpg" /></a>
+                          <span class="corner ">top<b>16</b></span>
+                      </div>
+                      <h3><a href="/resource/34425">《传教士》</a></h3>
+                      <p><span class="tag mov">美剧</span>第4季连载中</p>
+                      <p>剧情/魔幻/冒险</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/32207"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_727b112eed978408f695bcf1f3b5aee4.jpg" /></a>
+                          <span class="corner ">top<b>17</b></span>
+                      </div>
+                      <h3><a href="/resource/32207">《权欲》</a></h3>
+                      <p><span class="tag mov">美剧</span>第6季连载中</p>
+                      <p>动作/剧情/惊悚/冒险</p>
+                  </li><li class="clearfix">
+                      <div class="img">
+                          <a href="/resource/33697"><img src="http://tu.jstucdn.com/ftp/2019/0603/m_f506ed258936cdce7269921fb684d12c.jpg" /></a>
+                          <span class="corner ">top<b>18</b></span>
+                      </div>
+                      <h3><a href="/resource/33697">《行尸之惧》</a></h3>
+                      <p><span class="tag mov">美剧</span>第5季连载中</p>
+                      <p>丧尸</p>
+                  </li>              </ul>
+          </div>
+          <div style="margin-top:15px;">
+<!-- tb-ssp-300x250 -->
+<!-- tmp <script charset="gbk" src="https://p.tanx.com/ex?i=mm_111117185_10092486_41720950"></script> -->
+</div>
+
+        </div>
+        <div class="area-left">
+            <div class="resource-list">
+                <div class="resource-filter">
+                    <a class="corner selected" href="/resourcelist">全部</a>
+                    <a class="corner" href="/resourcelist?channel=movie">电影</a>
+                    <a class="corner" href="/resourcelist?channel=tv&area=美国">美剧</a>
+                    <a class="corner" href="/resourcelist?channel=tv&area=英国">英剧</a>
+                    <a class="corner" href="/resourcelist?channel=tv&area=日本">日剧</a>
+                    <a class="corner" href="/resourcelist?area=韩国">韩影剧</a>
+                    <a class="corner" href="#">小语种电影</a>
+                    <a class="corner" href="/resourcelist?channel=openclass">公开课</a>
+                    <a class="corner" href="/resourcelist?channel=documentary">纪录片</a>
+                </div>
+                <ul class="box clearfix resource-cats">
+                      <li>
+                         类别：<span><em></em><div class="list"><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=&page=1" class="selected">全部</a><a href="/resourcelist?channel=movie&area=&category=&year=&tvstation=&sort=&page=1" >电影</a><a href="/resourcelist?channel=tv&area=&category=&year=&tvstation=&sort=&page=1" >电视剧</a><a href="/resourcelist?channel=documentary&area=&category=&year=&tvstation=&sort=&page=1"  >纪录片</a><a href="/resourcelist?channel=openclass&area=&category=&year=&tvstation=&sort=&page=1"  >公开课</a></div></span> 
+                      </li>
+                      <li>
+                          地区：<span><em></em><div class="list"><a href="/resourcelist" class="selected">全部</a><a href="/resourcelist?channel=&area=%E7%BE%8E%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >美国</a><a href="/resourcelist?channel=&area=%E5%A4%A7%E9%99%86&category=&year=&tvstation=&sort=&page=1" >大陆</a><a href="/resourcelist?channel=&area=%E6%97%A5%E6%9C%AC&category=&year=&tvstation=&sort=&page=1" >日本</a><a href="/resourcelist?channel=&area=%E9%9F%A9%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >韩国</a><a href="/resourcelist?channel=&area=%E8%8B%B1%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >英国</a><a href="/resourcelist?channel=&area=%E9%A6%99%E6%B8%AF&category=&year=&tvstation=&sort=&page=1" >香港</a><a href="/resourcelist?channel=&area=%E5%8F%B0%E6%B9%BE&category=&year=&tvstation=&sort=&page=1" >台湾</a><a href="/resourcelist?channel=&area=%E5%8D%B0%E5%BA%A6&category=&year=&tvstation=&sort=&page=1" >印度</a><a href="/resourcelist?channel=&area=%E6%B3%95%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >法国</a><a href="/resourcelist?channel=&area=%E5%8A%A0%E6%8B%BF%E5%A4%A7&category=&year=&tvstation=&sort=&page=1" >加拿大</a><a href="/resourcelist?channel=&area=%E8%A5%BF%E7%8F%AD%E7%89%99&category=&year=&tvstation=&sort=&page=1" >西班牙</a><a href="/resourcelist?channel=&area=%E6%96%B0%E5%8A%A0%E5%9D%A1&category=&year=&tvstation=&sort=&page=1" >新加坡</a><a href="/resourcelist?channel=&area=%E6%B3%B0%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >泰国</a><a href="/resourcelist?channel=&area=%E6%84%8F%E5%A4%A7%E5%88%A9&category=&year=&tvstation=&sort=&page=1" >意大利</a><a href="/resourcelist?channel=&area=%E5%BE%B7%E5%9B%BD&category=&year=&tvstation=&sort=&page=1" >德国</a><a href="/resourcelist?channel=&area=%E4%BF%84%E7%BD%97%E6%96%AF&category=&year=&tvstation=&sort=&page=1" >俄罗斯</a><a href="/resourcelist?channel=&area=%E8%B6%8A%E5%8D%97&category=&year=&tvstation=&sort=&page=1" >越南</a><a href="/resourcelist?channel=&area=%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A&category=&year=&tvstation=&sort=&page=1" >澳大利亚</a><a href="/resourcelist?channel=&area=%E5%A2%A8%E8%A5%BF%E5%93%A5&category=&year=&tvstation=&sort=&page=1" >墨西哥</a><a href="/resourcelist?channel=&area=%E5%B7%B4%E8%A5%BF&category=&year=&tvstation=&sort=&page=1" >巴西</a><a href="/resourcelist?channel=&area=%E5%9C%9F%E8%80%B3%E5%85%B6&category=&year=&tvstation=&sort=&page=1" >土耳其</a><a href="/resourcelist?channel=&area=%E5%9F%83%E5%8F%8A&category=&year=&tvstation=&sort=&page=1" >埃及</a><a href="/resourcelist?channel=&area=%E5%85%B6%E4%BB%96&category=&year=&tvstation=&sort=&page=1" >其他</a></div></span>        
+                      </li>
+                      <li>
+                          类型：<span><em></em><div class="list"><a href="/resourcelist" class="selected">全部</a><a href="/resourcelist?channel=&area=&category=%E5%8A%A8%E4%BD%9C&year=&tvstation=&sort=&page=1" >动作</a><a href="/resourcelist?channel=&area=&category=%E6%88%98%E4%BA%89&year=&tvstation=&sort=&page=1" >战争</a><a href="/resourcelist?channel=&area=&category=%E5%89%A7%E6%83%85&year=&tvstation=&sort=&page=1" >剧情</a><a href="/resourcelist?channel=&area=&category=%E5%96%9C%E5%89%A7&year=&tvstation=&sort=&page=1" >喜剧</a><a href="/resourcelist?channel=&area=&category=%E7%94%9F%E6%B4%BB&year=&tvstation=&sort=&page=1" >生活</a><a href="/resourcelist?channel=&area=&category=%E5%81%B6%E5%83%8F&year=&tvstation=&sort=&page=1" >偶像</a><a href="/resourcelist?channel=&area=&category=%E9%9D%92%E6%98%A5&year=&tvstation=&sort=&page=1" >青春</a><a href="/resourcelist?channel=&area=&category=%E9%AD%94%E5%B9%BB&year=&tvstation=&sort=&page=1" >魔幻</a><a href="/resourcelist?channel=&area=&category=%E7%A7%91%E5%B9%BB&year=&tvstation=&sort=&page=1" >科幻</a><a href="/resourcelist?channel=&area=&category=%E5%8E%86%E5%8F%B2&year=&tvstation=&sort=&page=1" >历史</a><a href="/resourcelist?channel=&area=&category=%E7%BA%AA%E5%BD%95&year=&tvstation=&sort=&page=1" >纪录</a><a href="/resourcelist?channel=&area=&category=%E6%9A%B4%E5%8A%9B&year=&tvstation=&sort=&page=1" >暴力</a><a href="/resourcelist?channel=&area=&category=%E8%A1%80%E8%85%A5&year=&tvstation=&sort=&page=1" >血腥</a><a href="/resourcelist?channel=&area=&category=%E6%AD%8C%E8%88%9E&year=&tvstation=&sort=&page=1" >歌舞</a><a href="/resourcelist?channel=&area=&category=%E6%81%90%E6%80%96&year=&tvstation=&sort=&page=1" >恐怖</a><a href="/resourcelist?channel=&area=&category=%E6%83%8A%E6%82%9A&year=&tvstation=&sort=&page=1" >惊悚</a><a href="/resourcelist?channel=&area=&category=%E6%82%AC%E7%96%91&year=&tvstation=&sort=&page=1" >悬疑</a><a href="/resourcelist?channel=&area=&category=%E5%8F%A4%E8%A3%85&year=&tvstation=&sort=&page=1" >古装</a><a href="/resourcelist?channel=&area=&category=%E5%8F%B2%E8%AF%97&year=&tvstation=&sort=&page=1" >史诗</a><a href="/resourcelist?channel=&area=&category=%E4%B8%A7%E5%B0%B8&year=&tvstation=&sort=&page=1" >丧尸</a><a href="/resourcelist?channel=&area=&category=%E7%88%B1%E6%83%85&year=&tvstation=&sort=&page=1" >爱情</a><a href="/resourcelist?channel=&area=&category=%E5%8C%BB%E5%8A%A1&year=&tvstation=&sort=&page=1" >医务</a><a href="/resourcelist?channel=&area=&category=%E5%BE%8B%E6%94%BF&year=&tvstation=&sort=&page=1" >律政</a><a href="/resourcelist?channel=&area=&category=%E7%9C%9F%E4%BA%BA%E7%A7%80&year=&tvstation=&sort=&page=1" >真人秀</a><a href="/resourcelist?channel=&area=&category=%E5%8A%B1%E5%BF%97&year=&tvstation=&sort=&page=1" >励志</a><a href="/resourcelist?channel=&area=&category=%E4%BD%93%E8%82%B2&year=&tvstation=&sort=&page=1" >体育</a><a href="/resourcelist?channel=&area=&category=%E8%B0%8D%E6%88%98&year=&tvstation=&sort=&page=1" >谍战</a><a href="/resourcelist?channel=&area=&category=%E7%BD%AA%E6%A1%88&year=&tvstation=&sort=&page=1" >罪案</a><a href="/resourcelist?channel=&area=&category=%E5%86%92%E9%99%A9&year=&tvstation=&sort=&page=1" >冒险</a><a href="/resourcelist?channel=&area=&category=%E5%8A%A8%E7%94%BB&year=&tvstation=&sort=&page=1" >动画</a><a href="/resourcelist?channel=&area=&category=%E7%A7%91%E6%95%99&year=&tvstation=&sort=&page=1" >科教</a><a href="/resourcelist?channel=&area=&category=%E8%A5%BF%E9%83%A8&year=&tvstation=&sort=&page=1" >西部</a><a href="/resourcelist?channel=&area=&category=%E6%9E%AA%E6%88%98&year=&tvstation=&sort=&page=1" >枪战</a><a href="/resourcelist?channel=&area=&category=%E7%81%BE%E9%9A%BE&year=&tvstation=&sort=&page=1" >灾难</a><a href="/resourcelist?channel=&area=&category=%E4%BC%A0%E8%AE%B0&year=&tvstation=&sort=&page=1" >传记</a><a href="/resourcelist?channel=&area=&category=%E5%B9%BD%E9%BB%98&year=&tvstation=&sort=&page=1" >幽默</a><a href="/resourcelist?channel=&area=&category=%E8%AE%BD%E5%88%BA&year=&tvstation=&sort=&page=1" >讽刺</a><a href="/resourcelist?channel=&area=&category=%E7%AB%A5%E8%AF%9D&year=&tvstation=&sort=&page=1" >童话</a><a href="/resourcelist?channel=&area=&category=%E5%B9%BB%E6%83%B3&year=&tvstation=&sort=&page=1" >幻想</a><a href="/resourcelist?channel=&area=&category=%E7%BB%BC%E8%89%BA&year=&tvstation=&sort=&page=1" >综艺</a></div></span>   
+                      </li>
+                      <li>
+                          年代：<span><em></em><div class="list"><a href="/resourcelist" class="selected">全部</a><a href="/resourcelist?channel=&area=&category=&year=2019&tvstation=&sort=&page=1" >2019</a><a href="/resourcelist?channel=&area=&category=&year=2018&tvstation=&sort=&page=1" >2018</a><a href="/resourcelist?channel=&area=&category=&year=2017&tvstation=&sort=&page=1" >2017</a><a href="/resourcelist?channel=&area=&category=&year=2016&tvstation=&sort=&page=1" >2016</a><a href="/resourcelist?channel=&area=&category=&year=2015&tvstation=&sort=&page=1" >2015</a><a href="/resourcelist?channel=&area=&category=&year=2014&tvstation=&sort=&page=1" >2014</a><a href="/resourcelist?channel=&area=&category=&year=2013&tvstation=&sort=&page=1" >2013</a><a href="/resourcelist?channel=&area=&category=&year=2012&tvstation=&sort=&page=1" >2012</a><a href="/resourcelist?channel=&area=&category=&year=2011&tvstation=&sort=&page=1" >2011</a><a href="/resourcelist?channel=&area=&category=&year=2010&tvstation=&sort=&page=1" >2010</a><a href="/resourcelist?channel=&area=&category=&year=2009&tvstation=&sort=&page=1" >2009</a><a href="/resourcelist?channel=&area=&category=&year=2008&tvstation=&sort=&page=1" >2008</a><a href="/resourcelist?channel=&area=&category=&year=2007&tvstation=&sort=&page=1" >2007</a><a href="/resourcelist?channel=&area=&category=&year=2006&tvstation=&sort=&page=1" >2006</a><a href="/resourcelist?channel=&area=&category=&year=2005&tvstation=&sort=&page=1" >2005</a><a href="/resourcelist?channel=&area=&category=&year=2004&tvstation=&sort=&page=1" >2004</a><a href="/resourcelist?channel=&area=&category=&year=2003&tvstation=&sort=&page=1" >2003</a><a href="/resourcelist?channel=&area=&category=&year=2002&tvstation=&sort=&page=1" >2002</a><a href="/resourcelist?channel=&area=&category=&year=2001&tvstation=&sort=&page=1" >2001</a><a href="/resourcelist?channel=&area=&category=&year=2000&tvstation=&sort=&page=1" >2000</a><a href="/resourcelist?channel=&area=&category=&year=1999&tvstation=&sort=&page=1" >1999</a><a href="/resourcelist?channel=&area=&category=&year=1998&tvstation=&sort=&page=1" >1998</a><a href="/resourcelist?channel=&area=&category=&year=1997&tvstation=&sort=&page=1" >1997</a><a href="/resourcelist?channel=&area=&category=&year=1996&tvstation=&sort=&page=1" >1996</a><a href="/resourcelist?channel=&area=&category=&year=1995&tvstation=&sort=&page=1" >1995</a><a href="/resourcelist?channel=&area=&category=&year=1994&tvstation=&sort=&page=1" >1994</a><a href="/resourcelist?channel=&area=&category=&year=1993&tvstation=&sort=&page=1" >1993</a><a href="/resourcelist?channel=&area=&category=&year=1992&tvstation=&sort=&page=1" >1992</a><a href="/resourcelist?channel=&area=&category=&year=1991&tvstation=&sort=&page=1" >1991</a><a href="/resourcelist?channel=&area=&category=&year=1990&tvstation=&sort=&page=1" >1990</a></div></span>
+                     </li>
+                     <li>
+                          电视台：<span><em></em><div class="list"><a href="/resourcelist" class="selected">全部</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=A%26E&sort=&page=1" >A&E</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=ABC&sort=&page=1" >ABC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=ABC+Family&sort=&page=1" >ABC Family</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Adult+Swim&sort=&page=1" >Adult Swim</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Amazon&sort=&page=1" >Amazon</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=AMC&sort=&page=1" >AMC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=BBC&sort=&page=1" >BBC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=BeeTV&sort=&page=1" >BeeTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Cartoon+Network&sort=&page=1" >Cartoon Network</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=CBS&sort=&page=1" >CBS</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Ch&sort=&page=1" >Ch</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Channel+4&sort=&page=1" >Channel 4</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Cinemax&sort=&page=1" >Cinemax</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=CMT&sort=&page=1" >CMT</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Comedy+Central&sort=&page=1" >Comedy Central</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Crackle&sort=&page=1" >Crackle</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=CTV&sort=&page=1" >CTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=CW&sort=&page=1" >CW</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Disney&sort=&page=1" >Disney</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=EPIX&sort=&page=1" >EPIX</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=FOX&sort=&page=1" >FOX</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=FREEFORM&sort=&page=1" >FREEFORM</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=FX&sort=&page=1" >FX</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Globaltv&sort=&page=1" >Globaltv</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=HallMark+Channel&sort=&page=1" >HallMark Channel</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=HBO&sort=&page=1" >HBO</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Hulu&sort=&page=1" >Hulu</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=ITV&sort=&page=1" >ITV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=JTBC&sort=&page=1" >JTBC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=KBS&sort=&page=1" >KBS</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=MBC&sort=&page=1" >MBC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=MTV&sort=&page=1" >MTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=My+Lifetime&sort=&page=1" >My Lifetime</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=NBC&sort=&page=1" >NBC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Netflix&sort=&page=1" >Netflix</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=NHK&sort=&page=1" >NHK</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Nickelodeon&sort=&page=1" >Nickelodeon</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=NTV&sort=&page=1" >NTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=OCN&sort=&page=1" >OCN</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=OWN&sort=&page=1" >OWN</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=PBS&sort=&page=1" >PBS</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=SBS&sort=&page=1" >SBS</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Showtime&sort=&page=1" >Showtime</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Sky&sort=&page=1" >Sky</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Sky1&sort=&page=1" >Sky1</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Spike&sort=&page=1" >Spike</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Stan&sort=&page=1" >Stan</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Starz&sort=&page=1" >Starz</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=SundanceTV&sort=&page=1" >SundanceTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Syfy&sort=&page=1" >Syfy</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=TBS&sort=&page=1" >TBS</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=TLC&sort=&page=1" >TLC</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=TNT&sort=&page=1" >TNT</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=TV+LAND&sort=&page=1" >TV LAND</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=tvN&sort=&page=1" >tvN</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=USA&sort=&page=1" >USA</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=WGN&sort=&page=1" >WGN</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=WOWOW&sort=&page=1" >WOWOW</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=DC+Universe&sort=&page=1" >DC Universe</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Disney%2B&sort=&page=1" >Disney+</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Apple+TV%2B&sort=&page=1" >Apple TV+</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Paramount+Network&sort=&page=1" >Paramount Network</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=CBS+All+Access&sort=&page=1" >CBS All Access</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=truTV&sort=&page=1" >truTV</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=Youtube+RED&sort=&page=1" >Youtube RED</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E6%9C%9D%E6%97%A5&sort=&page=1" >朝日</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E4%B8%9C%E4%BA%AC%E5%8F%B0&sort=&page=1" >东京台</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E5%AF%8C%E5%A3%AB&sort=&page=1" >富士</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E5%9B%BD%E5%AE%B6%E5%9C%B0%E7%90%86%E9%A2%91%E9%81%93&sort=&page=1" >国家地理频道</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E5%8E%86%E5%8F%B2%E9%A2%91%E9%81%93&sort=&page=1" >历史频道</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E6%8E%A2%E7%B4%A2%E9%A2%91%E9%81%93&sort=&page=1" >探索频道</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=%E5%85%B6%E4%BB%96&sort=&page=1" >其他</a></div></span>
+                     </li>
+                     <li>
+                          排序：<span><em></em><div class="list"><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=update&page=1" class="selected">按照最后更新</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=pubdate&page=1" >按發布日期</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=rank&page=1" >按排名</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=score&page=1" >按評分</a><a href="/resourcelist?channel=&area=&category=&year=&tvstation=&sort=views&page=1" >按點擊率</a></div></span>
+                     </li>
+                </ul>
+                                
+                <div class="resource-quick">
+                    信息快速查询：<a href="/tv/schedule" class="corner"><span>播出时间表</span></a><a href="/resource/newseason" class="corner"><span>新季回归表</span></a><a href="/resource/renew" class="corner"><span>续订和取消</span></a><a href="/resource/playing" class="corner"><span>已开播新剧</span></a><a href="/resource/willplay" class="corner"><span>未开播新剧</span></a><a href="/resource/hotnew" class="corner"><span>热门新剧</span></a>         
+                 </div>
+                 
+                 <div style="margin:15px 0;">
+<!-- bd-960
+<script type="text/javascript">
+    (function() {
+        var s = "_" + Math.random().toString(36).slice(2);
+        document.write('<div style="" id="' + s + '"></div>');
+        (window.slotbydup = window.slotbydup || []).push({
+            id: "u3552844",
+            container:  s
+        });
+    })();
+</script>
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" ></script>
+ -->
+
+
+<script>
+/*
+var mediavFlow = {
+    sep: '@@@@@',
+    exposure: [],
+    reqtimes: 1,
+    mediavUID: "res_list_" + Date.parse(new Date) + "" + Math.random(),
+    trackClick: function(b) {
+        if(b) b = b.split(mediavFlow.sep);
+        b && b.length && $.each(b,
+        function(a, b) {
+            b && $("body").append('<img style="display:none;width:0;height:0;" src="' + b + "&_t=" + Math.random() + '"/>');
+        })
+    },
+    trackExposure: function(b) {
+        b && b.length && $.each(b,
+        function(a, b) {
+            b && $("body").append('<img style="display:none;width:0;height:0;" src="' + b + '"/>')
+        })
+    },
+    checkExposure: function() {
+        $.each($("li.mediav-flow"),
+        function(b, a) {
+            $(a).attr("data-sn") && mediavFlow.isVisible(a) && (mediavFlow.trackExposure(mediavFlow.exposure[$(a).attr("data-page") + "_" + $(a).attr("data-sn")]), $(a).removeAttr("data-sn"))
+        })
+    },
+    isVisible: function(b, a) {
+        var c = $(b).offset(),
+        d = $(window);
+        return ! (d.scrollTop() > c.top + $(b).outerHeight() || d.scrollTop() + d.height() < c.top)
+    },
+    getData: function(num) {
+        num = num || 1;
+        $.ajax({
+            url: "http:" == window.location.protocol ? "http://show.g.mediav.com/s?jsonp=?": "https://show-g.mediav.com/s?jsonp=?",
+            dataType: "jsonp",
+            data: {
+                type: 1,
+                of: 4,
+                newf: 1,
+                showid: "IP07oX",
+                uid: mediavFlow.mediavUID,
+                reqtimes: mediavFlow.reqtimes,
+                impct: num,
+                scheme: "http:" == window.location.protocol ? "http": "https"
+            },
+            timeout: 5E3,
+            success: function(a) {
+                if (!a || !a.ads || !a.ads.length) return ! 1;
+                mediavFlow.reqtimes++;
+                $.each(a.ads, function(i, c) {
+                    var f = null;
+                    if(c.assets && c.assets.length){ //4张组图
+                        var _ = '';
+                        _ =  '<li class="clearfix"><h3><strong class="tag tv">\u5e7f\u544a</strong><a href="' + c.curl + '">' + c.title + '</a></h3> <div style="margin-top:15px">';
+                        $.each(c.assets, function(a, b) {
+                            if (a > 3) return ! 1;
+                            _ += '<a href="' + b.curl + '"><img src="' + b.img + '"/></a>';
+                        });
+                        _ += '</div></li>';
+                        f = $(_);
+                    }
+                    if(3 == c.type){ // 单图大图
+                        f =  $('<li class="clearfix"><h3><strong class="tag tv">\u5e7f\u544a</strong><a href="' + c.curl + '">' + c.title + '</a></h3> <div style="margin-top:15px"><a href="' + c.curl + '"><img src="' + c.img + '" height="133"/></a></div></li>');
+                    } else { //单图小图
+                        f =  $('<li class="clearfix"><div class="fl-img"><a href="' + c.curl + '"><img src="' + c.img + '"/></a></div> <div class="fl-info" style="width:500px"><h3><strong class="tag tv">\u5e7f\u544a</strong><a href="' + c.curl + '">' + c.title + '</a></h3></div></li>');
+                    }
+                    //配置a的属性
+                    f.find("a").attr({
+                        target: "_blank"
+                    });
+                    //曝光监测
+                    f.addClass("mediav-flow").attr({
+                        "data-sn": i,
+                        "data-page": 1
+                    });
+                    mediavFlow.exposure[1 + "_" + i] = c.imptk;
+                    //点击监测
+                    if(c.clktk){
+                        f.find("a").attr({
+                            onclick: "javascript:mediavFlow.trackClick('"+c.clktk.join(mediavFlow.sep)+"');"
+                        });
+                    }
+                    //show
+                    if(i==0)
+                        f.show().insertAfter('div.resource-showlist li:eq('+2+')');
+                    else
+                        f.show().insertAfter('div.resource-showlist li:eq('+(2+3*i+i)+')');
+                });
+                mediavFlow.checkExposure();
+            }
+        });
+    }
+};
+
+mediavFlow.getData(5);
+
+$(window).scroll(function() {
+    mediavFlow.checkExposure();
+});
+
+$(window).resize(function() {
+    mediavFlow.checkExposure();
+});
+*/
+</script>
+
+<div id="ad1" style="display:none;text-align:center;margin:10px 0;width:100%;">
+</div>
+
+<div id="ad2" style="display:none;text-align:center;margin:10px 0;width:100%;">
+    <a target="_blank" href="http://52meiju.taobao.com/"><img src="http://img.zimuzu.tv/52meiju_728_90.jpg"/></a>
+</div>
+
+<div id="ad3" style="display:none;text-align:center;margin:10px 0;width:100%;">
+    <!-- <script src="http://g.ousns.net/bd-728.js?322" type="text/javascript"></script> -->
+</div>
+</div>
+
+<script>
+$(function(){
+    $('#ad1').show().insertAfter('div.resource-showlist li:eq(4)');
+    $('#ad2').show().insertAfter('div.resource-showlist li:eq(9)');
+    $('#ad3').show().insertAfter('div.resource-showlist li:eq(14)');
+});
+</script>
+
+                 
+                 <div class="resource-showlist has-point">
+                    <ul>
+                      <li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/34700" target="_blank"><img src="http://tu.jstucdn.com/ftp/2016/0830/m_7018c4f625daffe760c665de4843ad66.jpg" /><span class="point"><em>8.</em>8</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566833143"></span><h3 class="f14"><a href="/resource/34700" target="_blank"><strong class="tag tv">电影</strong>【日本】《最终幻想15：王者之剑》(Kingsglaive Final Fantasy XV)2017</a><font class="f4">[已上映]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【自由译者联盟原创翻译】</p>                                        <p>【类型】 动作</p> 
+                                        <p>【人气】 191665次浏览| 2419次收藏 | 2017-03-10首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1292</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/38457" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0807/m_1adfb51bd6148a0cdf740bd00c81803a.jpg" /><span class="point"><em>7.</em>2</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566832671"></span><h3 class="f14"><a href="/resource/38457" target="_blank"><strong class="tag tv">英剧</strong>【英国】《生活向上》(This Way Up)2019</a><font class="f4">[第1季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S01E01】</p>                                        <p>【类型】 喜剧</p> 
+                                        <p>【人气】 9002次浏览| 538次收藏 | 2019-08-09 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">3661</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/32207" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_727b112eed978408f695bcf1f3b5aee4.jpg" /><span class="point"><em>8.</em>7</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566832305"></span><h3 class="f14"><a href="/resource/32207" target="_blank"><strong class="tag tv">美剧</strong>【美国】《权欲》(Power)2014</a><font class="f4">[第6季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 深影字幕组原创翻译 【更新S06E01】</p>                                        <p>【类型】 动作/剧情/惊悚/冒险</p> 
+                                        <p>【人气】 2499909次浏览| 7836次收藏 | 2014-06-08 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">208</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/34699" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_7a9f73dd4a2fd9e8ee4677965c612147.jpg" /><span class="point"><em>8.</em>3</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566831809"></span><h3 class="f14"><a href="/resource/34699" target="_blank"><strong class="tag tv">美剧</strong>【美国】《湾畔倾情》(Chesapeake Shores)2016</a><font class="f4">[第4季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 ZiMuZu原创翻译/字幕更新S04E01</p>                                        <p>【类型】 剧情/爱情</p> 
+                                        <p>【人气】 61814次浏览| 1058次收藏 | 2016-08-15 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">2468</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/38524" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0815/m_92a50538009d3d2432d2d94e234dd9a1.jpg" /><span class="point gray"><em>0.</em>0</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566828979"></span><h3 class="f14"><a href="/resource/38524" target="_blank"><strong class="tag tv">英剧</strong>【英国】《桑迪顿》(Sanditon)2019</a><font class="f4">[mini剧连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 本剧确定翻译制作/北京时间8月26日播出/共8集</p>                                        <p>【类型】 剧情/爱情</p> 
+                                        <p>【人气】 3499次浏览| 201次收藏 | 2019-08-26 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">4378</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/38480" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0805/m_8c061909066a1638abca16e52c34871c.jpg" /><span class="point"><em>7.</em>6</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566826568"></span><h3 class="f14"><a href="/resource/38480" target="_blank"><strong class="tag tv">日剧</strong>【日本】《于是，活下去》(Soshite Ikiru)2019</a><font class="f4">[单剧连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 追新番字幕组/更新至04回/2019夏季日剧/中日双语字幕原创翻译</p>                                        <p>【类型】 爱情</p> 
+                                        <p>【人气】 8474次浏览| 640次收藏 | 2019-08-04 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">3246</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/37947" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0522/m_531b0c915af77fbe1f1da48b6abd35e8.jpg" /><span class="point"><em>8.</em>5</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566826415"></span><h3 class="f14"><a href="/resource/37947" target="_blank"><strong class="tag tv">美剧</strong>【美国】《迷醉》(Euphoria)2019</a><font class="f4">[第1季完结]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S01E08/本季终】【已续订第二季】</p>                                        <p>【类型】 剧情</p> 
+                                        <p>【人气】 286863次浏览| 25259次收藏 | 2019-06-17 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">146</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/37755" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0315/m_77d1dabd420fa1e6688cdad9ce8e1031.jpg" /><span class="point"><em>8.</em>6</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566826286"></span><h3 class="f14"><a href="/resource/37755" target="_blank"><strong class="tag tv">美剧</strong>【美国】《DC超级英雄美少女》(DC Super Hero Girls)2019</a><font class="f4">[第1季完结]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S01E13】</p>                                        <p>【类型】 动画</p> 
+                                        <p>【人气】 89828次浏览| 1198次收藏 | 2019-03-16 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1967</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/37997" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0726/m_d323f2b4be88dbb3586d02deb1307e44.jpg" /><span class="point"><em>8.</em>8</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566826262"></span><h3 class="f14"><a href="/resource/37997" target="_blank"><strong class="tag tv">美剧</strong>【美国】《潘尼沃斯》(Pennyworth)2019</a><font class="f4">[第1季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S01E05】</p>                                        <p>【类型】 动作/剧情/悬疑</p> 
+                                        <p>【人气】 131168次浏览| 14851次收藏 | 2019-07-29 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">238</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/33559" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0815/m_0ac58a88c69a2cea4933b8b69e4d67ea.jpg" /><span class="point"><em>9.</em>1</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566824904"></span><h3 class="f14"><a href="/resource/33559" target="_blank"><strong class="tag tv">美剧</strong>【美国】《球手》(Ballers)2015</a><font class="f4">[第5季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S05E01】</p>                                        <p>【类型】 剧情</p> 
+                                        <p>【人气】 453823次浏览| 12301次收藏 | 2015-06-22 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">220</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/27045" target="_blank"><img src="http://tu.jstucdn.com/ftp/2012/0721/m_cc23437bc2207d0e876a7d80474c4b5f.jpg" /><span class="point"><em>7.</em>2</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566817505"></span><h3 class="f14"><a href="/resource/27045" target="_blank"><strong class="tag tv">美剧</strong>【美国】《钢铁侠：装甲大冒险》(Iron Man Armored Adventures )2009</a><font class="f4">[第2季完结]</font></h3></dt>
+                                    <dd>
+                                                                                <p>【类型】 动画</p> 
+                                        <p>【人气】 54203次浏览| 310次收藏 | 2009-04-25 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">3666</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/33697" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0603/m_f506ed258936cdce7269921fb684d12c.jpg" /><span class="point"><em>7.</em>3</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566814548"></span><h3 class="f14"><a href="/resource/33697" target="_blank"><strong class="tag tv">美剧</strong>【美国】《行尸之惧》(Fear the Walking Dead)2015</a><font class="f4">[第5季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S05E11】</p>                                        <p>【类型】 丧尸</p> 
+                                        <p>【人气】 933336次浏览| 16768次收藏 | 2015-08-24 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1110</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/38321" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0708/m_d5e3c19b54d7157e1571f9ce5243d74d.jpg" /><span class="point"><em>8.</em>8</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566814002"></span><h3 class="f14"><a href="/resource/38321" target="_blank"><strong class="tag tv">日剧</strong>【日本】《No Side Game》(No Side Game)2019</a><font class="f4">[单剧连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 追新番字幕组/更新至07回/2019夏季日剧/中日双语字幕原创翻译</p>                                        <p>【类型】 励志/体育</p> 
+                                        <p>【人气】 27769次浏览| 1623次收藏 | 2019-07-07 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1628</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/37932" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0701/m_ba169c4b36220f2d0b6eb5cb03f33b80.jpeg" /><span class="point"><em>9.</em>1</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566812039"></span><h3 class="f14"><a href="/resource/37932" target="_blank"><strong class="tag tv">日剧</strong>【日本】《轮到你了》(Anata no Ban Desu)2019</a><font class="f4">[单剧连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 追新番字幕组/更新至18回+特别篇全1回/2019春季日剧/中日双语字幕原创翻译</p>                                        <p>【类型】 悬疑</p> 
+                                        <p>【人气】 948030次浏览| 60426次收藏 | 2019-04-14 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">41</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/38534" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0820/m_258f0ce026dbfa3cd2eb9223a65a8392.jpg" /><span class="point"><em>7.</em>0</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566810778"></span><h3 class="f14"><a href="/resource/38534" target="_blank"><strong class="tag tv">电影</strong>【美国】《南希·德鲁和隐藏的楼梯》(Nancy Drew and the Hidden Staircase)2019</a><font class="f4">[已上映]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【自由译者联盟原创翻译】</p>                                        <p>【类型】 剧情</p> 
+                                        <p>【人气】 2626次浏览| 90次收藏 | 2019-03-15首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">2680</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/36266" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0717/m_3009b66d3c751345312cbc16ec181cb7.jpg" /><span class="point"><em>7.</em>5</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566800115"></span><h3 class="f14"><a href="/resource/36266" target="_blank"><strong class="tag tv">美剧</strong>【美国】《苦甜曼哈顿》(Sweetbitter)2018</a><font class="f4">[第2季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【Classic字幕组原创译制】【更新至S02E07】</p>                                        <p>【类型】 剧情/生活/爱情</p> 
+                                        <p>【人气】 48565次浏览| 2482次收藏 | 2018-05-07 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">3345</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/32755" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0826/m_4557152c57c2768d470b5c8b03ed90de.jpg" /><span class="point"><em>8.</em>6</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566795728"></span><h3 class="f14"><a href="/resource/32755" target="_blank"><strong class="tag tv">美剧</strong>【美国】《情事》(The Affair)2014</a><font class="f4">[第5季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 ZiMuZu原创翻译/字幕更新S04E10/本季终</p>                                        <p>【类型】 剧情/生活/爱情</p> 
+                                        <p>【人气】 444199次浏览| 5502次收藏 | 2014-10-13 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1109</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/36381" target="_blank"><img src="http://tu.jstucdn.com/ftp/2018/0607/m_183b92e694ef2cb2299632ce81766969.jpg" /><span class="point"><em>8.</em>2</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566795473"></span><h3 class="f14"><a href="/resource/36381" target="_blank"><strong class="tag tv">美剧</strong>【美国】《继承》(Succession)2018</a><font class="f4">[第2季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【Fantopia字幕组原创翻译】【更新S01E10/本季完】</p>                                        <p>【类型】 剧情</p> 
+                                        <p>【人气】 129712次浏览| 4599次收藏 | 2018-06-04 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">1923</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/34425" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0701/m_8b3bb0b0d98d22a51dc1a2daf62b6d51.jpg" /><span class="point"><em>9.</em>0</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566795111"></span><h3 class="f14"><a href="/resource/34425" target="_blank"><strong class="tag tv">美剧</strong>【美国】《传教士》(Preacher)2016</a><font class="f4">[第4季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S04E04】</p>                                        <p>【类型】 剧情/魔幻/冒险</p> 
+                                        <p>【人气】 976366次浏览| 32286次收藏 | 2016-05-23 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">87</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li><li class="clearfix">
+                            <div class="fl-img">
+                                <a href="/resource/33301" target="_blank"><img src="http://tu.jstucdn.com/ftp/2019/0722/m_cf37d2dd4ca46d227786d757cd992fd7.jpg" /><span class="point"><em>9.</em>0</span></a>
+                            </div>
+                            <div class="fl-info">
+                                <dl>
+                                    <dt><span class="fr f3 dateline" time="1566794464"></span><h3 class="f14"><a href="/resource/33301" target="_blank"><strong class="tag tv">英剧</strong>【英国】《波达克》(Poldark)2015</a><font class="f4">[第5季连载中]</font></h3></dt>
+                                    <dd>
+                                        <p>【说明】 【原创翻译双语字幕】【更新S05E07】</p>                                        <p>【类型】 战争/生活/爱情</p> 
+                                        <p>【人气】 226511次浏览| 6014次收藏 | 2015-03-09 首播</p>
+                                        <p class="f14"><strong class="ranking">本站排名 <font class="f1">509</font></strong></p>
+                                    </dd>
+                                </dl> 
+                            </div>
+                        </li>                    </ul>
+                 </div> 
+                 <div class="pages">
+                    <div>&nbsp;<b><a class='cur' >1<span></span></a><a href='/resourcelist/?page=2&channel=&area=&category=&year=&tvstation=&sort='>2<span></span></a><a href='/resourcelist/?page=3&channel=&area=&category=&year=&tvstation=&sort='>3<span></span></a><a href='/resourcelist/?page=4&channel=&area=&category=&year=&tvstation=&sort='>4<span></span></a><a href='/resourcelist/?page=5&channel=&area=&category=&year=&tvstation=&sort='>5<span></span></a><a href='/resourcelist/?page=6&channel=&area=&category=&year=&tvstation=&sort='>6<span></span></a></b>&nbsp;<a href='/resourcelist/?page=2&channel=&area=&category=&year=&tvstation=&sort='>下一页<span></span></a>&nbsp;<a href='/resourcelist/?page=739&channel=&area=&category=&year=&tvstation=&sort='>...739<span></span></a></div>                </div>
+             </div>
+         </div>
+         <div class="clearfix"></div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+  $('.resource-cats li').each(function(){
+    var _text = $(this).find('.list a.selected').text();
+    $(this).find('em').before(_text);
+  });
+
+  $('.resource-showlist .dateline').each(function(){
+    $(this).text(GLOBAL.Util.formatDate($(this).attr('time')));
+  });
+
+});
+</script>
+
+<div style="text-align:center;margin-top:10px">
+<script type="text/javascript">
+if(is_ga_a()) document.write('<script src="http://g.ousns.net/ga-728-m3.js?232" type="text/javascript"><\/script>');
+//tb-ssp-950x90
+// tmp document.write('<script charset="gbk" src="http://p.tanx.com/ex?i=mm_111117185_10092486_42796389"><\/script>');
+</script>
+</div>
+
+
+<script src="http://tu.jstucdn.com/g3/tool29.js" type="text/javascript"></script>
+<script src="http://tu.jstucdn.com/g3/tool8-11.js" type="text/javascript"></script>
+
+<div class="lx167" style="width:1038px;margin:10px auto;background-color:#fff"></div>
+<script>
+//GLOBAL.JQUERY.LazyLoad($('div.lx167'),function(){
+  $('div.lx167').html('<iframe src="http://www.lx167.com/index/promo_iframe" width="1038" height="147" frameborder="0" scrolling="yes"></iframe>');
+//});
+</script>
+
+<script type='text/javascript' charset='utf-8' src='https://p.nqtnu.cn/V.aspx?Bln=978'></script>
+<!-- <script>if(document.location.pathname!='/') document.write('<script type="text/javascript" charset="utf-8" src="https://t.ywadf.cn/V.aspx?Bln=978"><\/script>');</script> -->
+
+
+
+
+<div class="footer">
+  <p class="tc" style="font-size:12px;"><a href="http://allyingshi.com/fanyi/index.html" target="_blank">商业翻译洽谈</a>  <a href="/announcement/63">联系我们</a>   <a href="/Announcement">加入字幕组</a>  <a href="http://app.rrys.tv/" target="_blank">APP手机客户端</a>  <a href="/bbs/list?fid=413">意见反馈</a>   <a href="/user/password/forgot">账号申诉</a>   <a href="/announcement/89">网站规章制度</a>   <a href="/announcement/79">其他字幕组入驻本站发布</a>  <a target="_blank" href="http://rss.rrys.tv/rss/feed">RSS订阅</a>   <div style="width:1px;overflow: hidden;height:1px;"><script src="http://s95.cnzz.com/z_stat.php?id=1254180690&web_id=1254180690" language="JavaScript"></script></div></p>
+  <p class="tc" style="font-size:14px;"><img src="http://tu.jstucdn.com/images/dibulogo.png">&nbsp;YYeTs人人影视 2006-2017</p>
+</div>
+<style>
+.WB_follow_ex, .WB_follow_ex .follow_btn_line{margin:0 auto !important;}
+</style>
+</body>
+</html>
