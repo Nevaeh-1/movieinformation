@@ -1,6 +1,7 @@
 import requests
 import json
 import re
+# import mysql
 from bs4 import BeautifulSoup
 from lxml import html
 from sqlalchemy import Column, String, Integer, create_engine
@@ -8,6 +9,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
+
 class movie(Base):
     __tablename__ = 'movie'
     id = Column(String(20), primary_key=True)
@@ -17,6 +20,8 @@ class movie(Base):
     english_name = Column(String(200), nullable=False)
     year = Column(Integer, nullable=False)
     url = Column(String(200), nullable=False)
+
+
 engine = create_engine('mysql+mysqlconnector://root:0123456789@localhost:3306/movieinformation')
 DBSession = sessionmaker(bind=engine)
 
@@ -28,9 +33,9 @@ page = int(soup.split('...')[1])
 m = []
 l = 0
 for x in range(page):
-    print('正在下载第'+str(x)+'页')
+    print('正在下载第' + str(x) + '页')
     if x > 0:
-        h = requests.Session().get(url+str(x)).text
+        h = requests.Session().get(url + str(x)).text
         soup = BeautifulSoup(h, "lxml")
         soup = soup.find_all('h3', 'f14')
     else:
@@ -53,7 +58,7 @@ for x in range(page):
         print(y)
         j = [{'type': t, 'country': country, 'ChineseName': name, 'EnglishName': ename, 'year': y}]
         m.append(j)
-        l = l+1
+        l = l + 1
         session = DBSession()
         new_movie = movie(id=l, type=t, country=country, chinese_name=name, english_name=ename, year=y, url=u)
         session.add(new_movie)
