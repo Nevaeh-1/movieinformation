@@ -1,7 +1,6 @@
 import requests
 import json
 import re
-# import mysql
 from bs4 import BeautifulSoup
 from lxml import html
 from sqlalchemy import Column, String, Integer, create_engine
