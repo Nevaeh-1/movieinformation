@@ -25,6 +25,7 @@ class movie(Base):
     english_name = Column(String(200), nullable=False)
     year = Column(Integer)
     url = Column(String(200), nullable=False)
+    image = Column(String)
 
 
 engine = create_engine('mysql+mysqlconnector://root:0123456789@localhost:3306/movieinformation')
