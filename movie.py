@@ -10,6 +10,12 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
+class moviehtml(Base):
+    __tablename__ = 'moviehtml'
+    id = Column(String, primary_key=True)
+    html = Column(Text, nullable=False)
+
+
 class movie(Base):
     __tablename__ = 'movie'
     id = Column(String(20), primary_key=True)
