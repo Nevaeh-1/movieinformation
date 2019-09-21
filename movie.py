@@ -23,7 +23,7 @@ class movie(Base):
     country = Column(String(50), nullable=False)
     chinese_name = Column(String(150), nullable=False)
     english_name = Column(String(200), nullable=False)
-    year = Column(Integer, nullable=False)
+    year = Column(Integer)
     url = Column(String(200), nullable=False)
 
 
