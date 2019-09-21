@@ -3,7 +3,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 from lxml import html
-from sqlalchemy import Column, String, Integer, create_engine
+from sqlalchemy import Column, String, Integer, Text, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
